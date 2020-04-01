@@ -1,0 +1,2 @@
+# CovidMaps
+Proyecto de telematioca
