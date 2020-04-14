@@ -3,4 +3,4 @@ Proyecto de telematica con la idea de mostrar en tiempo real las estadisticas ac
 # Contenedor Y DockerFile
 El contenedor subido con el DockerFile contiene el archivo HTML de la pagina web, que recibe la localizacion aproximada del usuario (por el dispositivo o por la IP, aun está por definirse) y muestra la informacion correspondiente.
 # HTML
-Este HTML basado en HTTP implementando Python se encargara de la pagina web para mostrar la informacion correspondiente, luego de tomar la ubicacion del cliente.
+Los archivos HTML basados en HTTP implementando Python se encargara de la pagina web para mostrar la informacion correspondiente, luego de tomar la ubicacion del cliente, hablo de varios HTML en caso de que haga falta varios archivos para mostrar cada informacion o hacer acciones correspondientes.
