@@ -1,0 +1,32 @@
+<!DOCTYPE html> <html lang="en"> <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, 
+    initial-scale=1.0">
+    <title>Este es el título de mi sitio web</title> </head> <body>
+    <h1>Bienvenido</h1>
+    <form method="POST" action="/usuario">
+    <fieldset>
+        <legend>Datos personales</legend>
+ 
+        <label>Nombre: </label><input name="nombre" type="text"/><br>
+        <label>Apellidos: </label><input name="apellidos" 
+	type="text"/><br>
+        <label>Sexo: </label><select name="sexo" >
+            <option value="hombre">Hombre</option>
+            <option value="mujer">Mujer</option></select><br><br>
+        <label >Edad: </label>
+            <input name ="edad" type="text"/><br>
+        <label>Email</label><input name="email" type="email"/><br><br>
+	<label>Latitud</label><input name="latitud" type="text">
+	<br><label>Longitud</label><input name="longitud" type="text">
+	<P>¿Ha tenido Coronavirus?
+			<br><input type="radio" name="corona" value = "SI">S&iacute;
+			<br><input type="radio" name="corona" value = "NO" checked>No
+        <P><input type="submit"  title="Enviar"> 
+        
+    </fieldset>
+    </form>
+    <!-- Script para mostrar las coordenadas-->
+    
+</body>
+</html>
