@@ -2,19 +2,19 @@ from flask import Flask, render_template, request, redirect
 import sqlite3
 import pandas as pd
 import dash
-import dash_core_components as dcc
-import dash_html_components as html
+from dash import dcc
+from dash import html
 import plotly.graph_objs as go
 import numpy as np
 from decimal import Decimal
  
 
 app = Flask(__name__)
-db_path = 'BD/BaseDatos2.db'
+db_path = 'ProyectoFinalTele/BD/CovidMaps.db'
 mapa = dash.Dash(__name__,server=app,routes_pathname_prefix='/mapa/')
 df = pd.read_excel('BaseDeDatosValleDeAburra100%realNoFake.xls')
 cnx = sqlite3.connect(db_path)
-database = pd.read_sql_query("SELECT * FROM covidpositivo", cnx)
+database = pd.read_sql_query("SELECT * FROM contagiados", cnx)
 data = pd.concat([database,df],axis=0)
 vectorLat = data['latitud']
 vectorLon = data['longitud']
@@ -28,16 +28,15 @@ def home():
    if request.method=="POST":
         nombre = request.form.get("nombre")
         apellido = request.form.get("apellidos")
-        correo = request.form.get("correo")
-        edad = request.form.get("edad")
         sexo = request.form.get("sexo")
+        edad = request.form.get("edad")
+        correo = request.form.get("email")
+        localidad = request.form.get("localidad")
         corona = request.form.get("corona")
-        latitud = request.form.get("latitud")
-        longitud = request.form.get("longitud")
         if corona == "SI":
             con = sqlite3.connect(db_path)
             cur = con.cursor()
-            cur.execute("INSERT INTO covidpositivo VALUES(" +latitud + "," + longitud+ ")")
+            cur.execute("INSERT INTO contagiados(nombre,apellidos,sexo,edad,email,id_localidad) VALUES('{}','{}','{}','{}','{}','{}')".format(nombre,apellido,sexo,edad,correo,localidad))
             con.commit()
             con.close()
         return redirect('/mapa')
@@ -48,7 +47,7 @@ def home():
 def graficar():
     df = pd.read_excel('BaseDeDatosValleDeAburra100%realNoFake.xls')
     cnx = sqlite3.connect(db_path)
-    database = pd.read_sql_query("SELECT * FROM covidpositivo", cnx)
+    database = pd.read_sql_query("SELECT * FROM contagiados", cnx)
     cnx.commit()
     cnx.close()
     data = pd.concat([database,df],axis=0)
@@ -92,7 +91,7 @@ def graficar():
 def actualizar(clicks):
     df = pd.read_excel('BaseDeDatosValleDeAburra100%realNoFake.xls')
     cnx = sqlite3.connect(db_path)
-    database = pd.read_sql_query("SELECT * FROM covidpositivo", cnx)
+    database = pd.read_sql_query("SELECT * FROM contagiados", cnx)
     cnx.commit()
     cnx.close()
     data = pd.concat([database,df],axis=0)
@@ -103,25 +102,24 @@ def actualizar(clicks):
     suroriental=0
     suroccidental=0
     color = []
-    for x in range(0,len(df['latitud'])):
-        if (Decimal(df['longitud'][x])>Decimal(-75.565780) and Decimal(df['latitud'][x])>Decimal(6.269979)):
-            nororiental = nororiental + 1
-        elif df['longitud'][x]>(-75.633870) and df['longitud'][x]<(-75.565780) and df['latitud'][x]>(6.269979) and df['latitud'][x]<(6.347253):
-            noroccidental = noroccidental + 1
-        elif df['longitud'][x]>(-75.565780) and df['longitud'][x]<(-75.495771) and df['latitud'][x]>(6.139561) and df['latitud'][x]<(6.269979):
-            suroriental = suroriental + 1
-        elif df['longitud'][x]>(-75.633870) and df['longitud'][x]<(-75.565780) and df['latitud'][x]>(6.139561) and df['latitud'][x]<(6.269979):
-            suroccidental = suroccidental + 1
-    for x in range(0,len(database['latitud'])):
-        if (Decimal(database['longitud'][x])>Decimal(-75.565780) and Decimal(database['latitud'][x])>Decimal(6.269979)):
-            nororiental = nororiental + 1
-        elif database['longitud'][x]>-75.633870 and database['longitud'][x]<-75.565780 and database['latitud'][x]>6.269979 and database['latitud'][x]<6.347253:
-            noroccidental = noroccidental + 1
-        elif database['longitud'][x]>-75.565780 and database['longitud'][x]<-75.495771 and database['latitud'][x]>6.139561 and database['latitud'][x]<6.269979:
-            suroriental = suroriental + 1
-        elif database['longitud'][x]>-75.633870 and database['longitud'][x]<-75.565780 and database['latitud'][x]>6.139561 and database['latitud'][x]<6.269979:
-            suroccidental = suroccidental + 1
-        #print(nororiental,"-",noroccidental,"-",suroriental,"-",suroccidental)
+    # for x in range(0,len(df['latitud'])):
+    #     if (Decimal(df['longitud'][x])>Decimal(-75.565780) and Decimal(df['latitud'][x])>Decimal(6.269979)):
+    #         nororiental = nororiental + 1
+    #     elif df['longitud'][x]>(-75.633870) and df['longitud'][x]<(-75.565780) and df['latitud'][x]>(6.269979) and df['latitud'][x]<(6.347253):
+    #         noroccidental = noroccidental + 1
+    #     elif df['longitud'][x]>(-75.565780) and df['longitud'][x]<(-75.495771) and df['latitud'][x]>(6.139561) and df['latitud'][x]<(6.269979):
+    #         suroriental = suroriental + 1
+    #     elif df['longitud'][x]>(-75.633870) and df['longitud'][x]<(-75.565780) and df['latitud'][x]>(6.139561) and df['latitud'][x]<(6.269979):
+    #         suroccidental = suroccidental + 1
+    # for x in range(0,len(database['latitud'])):
+    #     if (Decimal(database['longitud'][x])>Decimal(-75.565780) and Decimal(database['latitud'][x])>Decimal(6.269979)):
+    #         nororiental = nororiental + 1
+    #     elif database['longitud'][x]>-75.633870 and database['longitud'][x]<-75.565780 and database['latitud'][x]>6.269979 and database['latitud'][x]<6.347253:
+    #         noroccidental = noroccidental + 1
+    #     elif database['longitud'][x]>-75.565780 and database['longitud'][x]<-75.495771 and database['latitud'][x]>6.139561 and database['latitud'][x]<6.269979:
+    #         suroriental = suroriental + 1
+    #     elif database['longitud'][x]>-75.633870 and database['longitud'][x]<-75.565780 and database['latitud'][x]>6.139561 and database['latitud'][x]<6.269979:
+    #         suroccidental = suroccidental + 1
     figure={
                 'data': [{
                 'lat': vectorLat,
@@ -155,7 +153,7 @@ def actualizar(clicks):
 def sendata(clicks):
     df = pd.read_excel('BaseDeDatosValleDeAburra100%realNoFake.xls')
     cnx = sqlite3.connect(db_path)
-    database = pd.read_sql_query("SELECT * FROM covidpositivo", cnx)
+    database = pd.read_sql_query("SELECT * FROM contagiados", cnx)
     cnx.commit()
     cnx.close()
     nororiental=0
@@ -163,37 +161,36 @@ def sendata(clicks):
     suroriental=0
     suroccidental=0
     color = []
-    for x in range(0,len(df['latitud'])):
-        if (Decimal(df['longitud'][x])>Decimal(-75.565780) and Decimal(df['latitud'][x])>Decimal(6.269979)):
-            nororiental = nororiental + 1
-        elif df['longitud'][x]<(-75.565780) and df['latitud'][x]>(6.269979):
-            noroccidental = noroccidental + 1
-        elif df['longitud'][x]>(-75.565780) and df['latitud'][x]<(6.269979):
-            suroriental = suroriental + 1
-        elif df['longitud'][x]<(-75.565780) and df['latitud'][x]<(6.269979):
-            suroccidental = suroccidental + 1
-    for x in range(0,len(database['latitud'])):
-        if (Decimal(database['longitud'][x])>Decimal(-75.565780) and Decimal(database['latitud'][x])>Decimal(6.269979)):
-            nororiental = nororiental + 1
-        elif database['longitud'][x]<-75.565780 and database['latitud'][x]>6.269979:
-            noroccidental = noroccidental + 1
-        elif database['longitud'][x]>-75.565780 and database['latitud'][x]<6.269979:
-            suroriental = suroriental + 1
-        elif database['longitud'][x]<-75.565780 and database['latitud'][x]<6.269979:
-            suroccidental = suroccidental + 1
+    # for x in range(0,len(df['latitud'])):
+    #     if (Decimal(df['longitud'][x])>Decimal(-75.565780) and Decimal(df['latitud'][x])>Decimal(6.269979)):
+    #         nororiental = nororiental + 1
+    #     elif df['longitud'][x]<(-75.565780) and df['latitud'][x]>(6.269979):
+    #         noroccidental = noroccidental + 1
+    #     elif df['longitud'][x]>(-75.565780) and df['latitud'][x]<(6.269979):
+    #         suroriental = suroriental + 1
+    #     elif df['longitud'][x]<(-75.565780) and df['latitud'][x]<(6.269979):
+    #         suroccidental = suroccidental + 1
+    # for x in range(0,len(database['latitud'])):
+    #     if (Decimal(database['longitud'][x])>Decimal(-75.565780) and Decimal(database['latitud'][x])>Decimal(6.269979)):
+    #         nororiental = nororiental + 1
+    #     elif database['longitud'][x]<-75.565780 and database['latitud'][x]>6.269979:
+    #         noroccidental = noroccidental + 1
+    #     elif database['longitud'][x]>-75.565780 and database['latitud'][x]<6.269979:
+    #         suroriental = suroriental + 1
+    #     elif database['longitud'][x]<-75.565780 and database['latitud'][x]<6.269979:
+    #         suroccidental = suroccidental + 1
     return "Zona nororiental: ",nororiental," ||Zona noroccidental: ",noroccidental," ||Zona suroriental: ",suroriental," ||Zona suroccidental: ",suroccidental
 @app.route('/', methods =["GET"])
 def logueo():
-    """con = sqlite3.connect(db_path)
-    cur = con.cursor()
-    cur.execute("DROP TABLE IF EXISTS data")
-    cur.execute("CREATE TABLE covidpositivo (latitud DOUBLE, longitud DOUBLE)")
-    con.commit()
-    con.close()"""
     data = pd.concat([database,df],axis=0)
     vectorLat = data['latitud']
     vectorLon = data['longitud']
-    return render_template("index.html")
+    cnx = sqlite3.connect('ProyectoFinalTele/BD/CovidMaps.db')
+    localidades = pd.read_sql_query("SELECT * FROM localidades", cnx)
+    cnx.commit()
+    cnx.close()
+    localidades = localidades.to_dict(orient='records')
+    return render_template("Rework.html",localidades=localidades)
 
  
 
