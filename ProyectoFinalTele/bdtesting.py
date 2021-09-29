@@ -7,6 +7,7 @@ from dash import html
 import plotly.graph_objs as go
 import numpy as np
 from decimal import Decimal
+import json
 
 app = Flask(__name__)
 db_path = 'ProyectoFinalTele/BD/CovidMaps.db'
@@ -80,6 +81,12 @@ def actualizar(n_clicks):
     # figure = go.Scattermapbox(data=None,layout = None) Util para luego, clase plotly con dash
     # fig = go.Figure(go.Scatter(x=[0, 1, 2, 0], y=[0, 2, 0, 0], fill="toself"))
     # fig.show()
+
+    #Lectura JSON y #Vectores
+    with open('ProyectoFinalTele/BD/localidades.json', encoding="utf8") as file:
+        dataJSON = json.load(file)
+        print(dataJSON['features'][0]['geometry']['rings'][0])
+
     figure = {
         'data': [{
             'lon': [-73.606352888],
