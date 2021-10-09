@@ -86,12 +86,15 @@ def actualizar(n_clicks):
     coord = []
     long = []
     lat = []
+    regiones = []
+    contagiados=[]
     with open('ProyectoFinalTele/BD/localidades.json', encoding="utf8") as file:
         dataJSON = json.load(file)
         for i in range(331):
             coord.append(dataJSON['features'][i]['geometry']['rings'])
             long.append(dataJSON['features'][i]['geometry']['rings'][0][0][0])
             lat.append(dataJSON['features'][i]['geometry']['rings'][0][0][1])
+            regiones.append(dataJSON['features'][i]['attributes']['NOMBRE'])
 
         # print(dataJSON['features'][0]['geometry']['rings'][0][0][0])
 
@@ -100,12 +103,13 @@ def actualizar(n_clicks):
             'lon': long,
             'lat': lat, # Datos de posiciones
             'marker': {
-                'color': 'green',
+                'color': 'rgba(8, 0, 255,0.5)',
                 'size': 20,
                 'opacity': 0.6
             },
             'customdata': 2,
-            'type': 'scattermapbox'
+            'type': 'scattermapbox',
+            'hovertext':regiones
         }],
         'layout': {
             'mapbox': {
@@ -122,10 +126,10 @@ def actualizar(n_clicks):
                             }
                         }]
                     },
-                    'type': "fill", 'below': "traces", 'color': "royalblue"}]},
+                    'type': "fill", 'below': "traces", 'color': "rgba(255,255,255,0.5)"}]},
             'showlegend': 'true',
-            'margin': {'l': 0, 'r': 0, 'b': 0, 't': 0},
-            'hoverinfo':'Hola'
+            'margin': {'l': 0, 'r': 0, 'b': 0, 't': 0}
+            
         }
     }
     return figure
