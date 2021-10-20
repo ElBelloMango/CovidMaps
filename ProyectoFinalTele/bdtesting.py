@@ -88,6 +88,22 @@ def actualizar(n_clicks):
     lat = []
     regiones = []
     contagiados=[]
+    informacion = []
+    
+    def cargarContagiados():
+        cnx = sqlite3.connect('ProyectoFinalTele/BD/CovidMaps.db')
+        consulta = pd.read_sql_query("SELECT * FROM vrq_01", cnx)
+        cnx.commit()
+        cnx.close()
+        for i in range(331):
+            contagiados.append(0)
+        for i in consulta.index:
+            indice = regiones.index(consulta["nombre_localidad"][i])
+            contagiados[indice] = consulta["Numero_Contagiados"][i]
+        for i in range(331):
+            informacion.append("Region: {} {} Contagiados: {}".format(regiones[i],"\n",contagiados[i]))
+            
+
     with open('ProyectoFinalTele/BD/localidades.json', encoding="utf8") as file:
         dataJSON = json.load(file)
         for i in range(331):
@@ -95,8 +111,7 @@ def actualizar(n_clicks):
             long.append(dataJSON['features'][i]['geometry']['rings'][0][0][0])
             lat.append(dataJSON['features'][i]['geometry']['rings'][0][0][1])
             regiones.append(dataJSON['features'][i]['attributes']['NOMBRE'])
-
-        # print(dataJSON['features'][0]['geometry']['rings'][0][0][0])
+        cargarContagiados()
 
     figure = {
         'data': [{
@@ -109,7 +124,7 @@ def actualizar(n_clicks):
             },
             'customdata': 2,
             'type': 'scattermapbox',
-            'hovertext':regiones
+            'hovertext':informacion
         }],
         'layout': {
             'mapbox': {
