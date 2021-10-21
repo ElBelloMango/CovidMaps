@@ -62,8 +62,6 @@ def graficar():
         html.H1('Covid 19 en el valle de Aburra'),
         html.Button('Actualizar datos', id='submit-val',
                     className="btn btn-outline-primary btn-lg btn-block", n_clicks=0),
-        html.Button('Zoom', id='zoom',
-                    className="btn btn-outline-warning btn-lg btn-block", n_clicks=0),
         html.Td(),
         html.Div(id='text-content'),
         dcc.Graph(id='map'),
@@ -165,7 +163,7 @@ def logueo():
     cnx.commit()
     cnx.close()
     localidades = localidades.to_dict(orient='records')
-    return render_template("Rework.html", localidades=localidades)
+    return render_template("index.html", localidades=localidades)
 
 
 if __name__ == '__main__':
