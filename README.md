@@ -12,7 +12,7 @@ En la versión estándar generaremos ganancias por medio del hosting de anuncios
   
    # index.html
    Este archivo de hipertexto contendrá la interfaz de entrada que verá el usuario. Aca se obtendran los datos del usuario como el nombre y la edad, incluyendo su localización actual y si ha tenido covid-19; y se redireccionará al archivo proyect.py. (Este archivo estará en un directorio llamada templates)
-   # bdtesting.py
+   # covidmaps.py
    Aca se contendrá el cuerpo del proyecto (se utilizará la libreria flask de python). En este archivo se obtendrán los datos enviados por el index.html mediante el método POST y a partir de estos se buscará en las Bases de datos la información de los casos de covid-19 de la localidad para realizar el gráfico y el analisis por zonas. Si según los datos ingresados el usuario tiene covid-19 o sospecha de ello entonces su información se añadira a la base de datos. (Se implementaron dos bases de datos: La primera es una base de datos basada en una hoja de cálculo dada por el municipio y la otra es una base de datos en sqlite3 que almacena las localizaciones de las personas con covid-19 que ingresan a la página)
 
 
