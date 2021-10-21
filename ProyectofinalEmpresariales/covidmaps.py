@@ -10,7 +10,7 @@ from decimal import Decimal
 import json
 
 app = Flask(__name__)
-db_path = 'ProyectoFinalTele/BD/CovidMaps.db'
+db_path = 'ProyectofinalEmpresariales/BD/CovidMaps.db'
 external_stylesheets = [
     'https://codepen.io/chriddyp/pen/bWLwgP.css',
     {
@@ -62,8 +62,6 @@ def graficar():
         html.H1('Covid 19 en el valle de Aburra'),
         html.Button('Actualizar datos', id='submit-val',
                     className="btn btn-outline-primary btn-lg btn-block", n_clicks=0),
-        html.Button('Zoom', id='zoom',
-                    className="btn btn-outline-warning btn-lg btn-block", n_clicks=0),
         html.Td(),
         html.Div(id='text-content'),
         dcc.Graph(id='map'),
@@ -91,7 +89,7 @@ def actualizar(n_clicks):
     informacion = []
     
     def cargarContagiados():
-        cnx = sqlite3.connect('ProyectoFinalTele/BD/CovidMaps.db')
+        cnx = sqlite3.connect('ProyectofinalEmpresariales/BD/CovidMaps.db')
         consulta = pd.read_sql_query("SELECT * FROM vrq_01", cnx)
         cnx.commit()
         cnx.close()
@@ -104,7 +102,7 @@ def actualizar(n_clicks):
             informacion.append("Region: {} {} Contagiados: {}".format(regiones[i],"\n",contagiados[i]))
             
 
-    with open('ProyectoFinalTele/BD/localidades.json', encoding="utf8") as file:
+    with open('ProyectofinalEmpresariales/BD/localidades.json', encoding="utf8") as file:
         dataJSON = json.load(file)
         for i in range(331):
             coord.append(dataJSON['features'][i]['geometry']['rings'])
@@ -160,12 +158,12 @@ def actualizar(n_clicks):
 
 @app.route('/', methods=["GET"])
 def logueo():
-    cnx = sqlite3.connect('ProyectoFinalTele/BD/CovidMaps.db')
+    cnx = sqlite3.connect('ProyectofinalEmpresariales/BD/CovidMaps.db')
     localidades = pd.read_sql_query("SELECT * FROM localidades", cnx)
     cnx.commit()
     cnx.close()
     localidades = localidades.to_dict(orient='records')
-    return render_template("Rework.html", localidades=localidades)
+    return render_template("index.html", localidades=localidades)
 
 
 if __name__ == '__main__':
